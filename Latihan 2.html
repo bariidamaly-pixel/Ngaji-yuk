@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Slide Latihan Ayat + Tajwid</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "Plus Jakarta Sans", sans-serif;
+      background: #f6f8f7;
+      color: #0f172a;
+      padding: 20px 16px 40px;
+    }
+    .box {
+      max-width: 680px;
+      margin: 0 auto;
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      padding: 24px 20px;
+      text-align: center;
+    }
+    .meta {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #0f766e;
+      margin-bottom: 10px;
+    }
+    .ayat {
+      font-family: "Amiri", serif;
+      direction: rtl;
+      font-size: 2.3rem;
+      font-weight: 700;
+      line-height: 1.7;
+      margin: 10px 0 14px;
+    }
+    .fokus {
+      display: inline-block;
+      background: #fef9c3;
+      color: #854d0e;
+      border: 1px solid #fde047;
+      border-radius: 999px;
+      padding: 6px 14px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+    .btns {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+    button {
+      border: none;
+      border-radius: 10px;
+      padding: 10px 16px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .btn-main { background: #0f766e; color: #fff; }
+    .btn-soft { background: #ccfbf1; color: #0f766e; }
+    .bantuan {
+      background: #f6f8f7;
+      border: 1px dashed #cbd5e1;
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 16px;
+    }
+    .hidden { display: none; }
+    .latin { font-weight: 700; color: #0f766e; margin-bottom: 4px; }
+    .arti { font-size: 0.9rem; color: #475569; }
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+    .counter { font-size: 0.85rem; color: #475569; font-weight: 600; }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <div class="meta" id="sumber"></div>
+    <div class="ayat" id="ayat"></div>
+    <div class="fokus" id="fokus"></div>
+    <div class="btns">
+      <button class="btn-soft" id="btnSuara">Putar Suara</button>
+      <button class="btn-soft" id="btnBantuan">Tampilkan Latin &amp; Arti</button>
+    </div>
+    <div class="bantuan hidden" id="bantuan">
+      <div class="latin" id="latin"></div>
+      <div class="arti" id="arti"></div>
+    </div>
+    <div class="nav">
+      <button class="btn-main" id="btnPrev">Sebelumnya</button>
+      <span class="counter" id="counter"></span>
+      <button class="btn-main" id="btnNext">Berikutnya</button>
+    </div>
+  </div>
+
+  <script>
+    const SLIDES = [
+      {
+        sumber: "QS. Al-Fatihah : 1",
+        ayat: "بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ",
+        fokus: "Fokus: Alif lam syamsiyah & mad arid lis-sukun di akhir",
+        latin: "Bismillaahirrahmaanirrahiim",
+        arti: "Dengan nama Allah Yang Maha Pengasih, Maha Penyayang."
+      },
+      {
+        sumber: "QS. Al-Fatihah : 2",
+        ayat: "الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ",
+        fokus: "Fokus: Alif lam qamariyah & mad pada al-aalamiin",
+        latin: "Alhamdulillaahi rabbil 'aalamiin",
+        arti: "Segala puji bagi Allah, Tuhan seluruh alam."
+      },
+      {
+        sumber: "QS. Al-Ikhlas : 1",
+        ayat: "قُلْ هُوَ اللَّهُ أَحَدٌ",
+        fokus: "Fokus: Qalqalah sughra pada lam sukun (qul) & mad pada huwallaahu",
+        latin: "Qul huwallaahu ahad",
+        arti: "Katakanlah (Muhammad), Dialah Allah, Yang Maha Esa."
+      },
+      {
+        sumber: "QS. Al-Falaq : 1",
+        ayat: "قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ",
+        fokus: "Fokus: Mad thabi'i pada a'uudzu & qalqalah kubra pada qaf di akhir",
+        latin: "Qul a'uudzu birabbil falaq",
+        arti: "Katakanlah, aku berlindung kepada Tuhan yang menguasai subuh."
+      },
+      {
+        sumber: "QS. An-Nas : 1",
+        ayat: "قُلْ أَعُوذُ بِرَبِّ النَّاسِ",
+        fokus: "Fokus: Ghunnah pada nun bertasydid (an-naas) & mad 2 ketukan",
+        latin: "Qul a'uudzu birabbin naas",
+        arti: "Katakanlah, aku berlindung kepada Tuhan manusia."
+      },
+      {
+        sumber: "QS. Al-Baqarah : 2",
+        ayat: "ذَٰلِكَ الْكِتَابُ لَا رَيْبَ ۛ فِيهِ",
+        fokus: "Fokus: Alif lam qamariyah (al-kitaabu) & mad thabi'i",
+        latin: "Dzaalikal kitaabu laa raiba fiih",
+        arti: "Kitab (Al-Qur'an) ini tidak ada keraguan padanya."
+      },
+      {
+        sumber: "QS. Al-Baqarah : 6",
+        ayat: "إِنَّ الَّذِينَ كَفَرُوا",
+        fokus: "Fokus: Ghunnah pada nun bertasydid (inna) & mad pada kafaruu",
+        latin: "Innalladziina kafaruu",
+        arti: "Sesungguhnya orang-orang yang kafir."
+      },
+      {
+        sumber: "QS. Ali 'Imran : 8",
+        ayat: "رَبَّنَا لَا تُزِغْ قُلُوبَنَا",
+        fokus: "Fokus: Mad 2 ketukan pada rabbanaa & quluubanaa",
+        latin: "Rabbanaa laa tuzigh quluubanaa",
+        arti: "Ya Tuhan kami, janganlah Engkau jadikan hati kami condong kepada kesesatan."
+      },
+      {
+        sumber: "QS. Al-Ikhlas : 2",
+        ayat: "اللَّهُ الصَّمَدُ",
+        fokus: "Fokus: Alif lam syamsiyah pada ash-shamadu & qalqalah saat waqaf",
+        latin: "Allaahush shamad",
+        arti: "Allah tempat meminta segala sesuatu."
+      },
+      {
+        sumber: "QS. Al-Lahab : 1",
+        ayat: "تَبَّتْ يَدَا أَبِي لَهَبٍ وَتَبَّ",
+        fokus: "Fokus: Idgham bighunnah pada lahabin wa tabba & tasydid di akhir",
+        latin: "Tabbat yadaa abii lahabiw wa tabb",
+        arti: "Binasalah kedua tangan Abu Lahab dan sungguh dia akan binasa."
+      },
+      {
+        sumber: "QS. Al-Ashr : 2",
+        ayat: "إِنَّ الْإِنْسَانَ لَفِي خُسْرٍ",
+        fokus: "Fokus: Ghunnah (inna) & ikhfa haqiqi pada nun sukun (al-insaan)",
+        latin: "Innal insaana lafii khusr",
+        arti: "Sesungguhnya manusia itu benar-benar dalam kerugian."
+      }
+    ];
+
+    let idx = 0;
+    const sumberEl = document.getElementById("sumber");
+    const ayatEl = document.getElementById("ayat");
+    const fokusEl = document.getElementById("fokus");
+    const latinEl = document.getElementById("latin");
+    const artiEl = document.getElementById("arti");
+    const bantuanEl = document.getElementById("bantuan");
+    const counterEl = document.getElementById("counter");
+    const btnBantuan = document.getElementById("btnBantuan");
+
+    function render() {
+      const s = SLIDES[idx];
+      sumberEl.textContent = s.sumber;
+      ayatEl.textContent = s.ayat;
+      fokusEl.textContent = s.fokus;
+      latinEl.textContent = s.latin;
+      artiEl.textContent = s.arti;
+      counterEl.textContent = (idx + 1) + " / " + SLIDES.length;
+      bantuanEl.classList.add("hidden");
+      btnBantuan.textContent = "Tampilkan Latin & Arti";
+    }
+
+    document.getElementById("btnSuara").addEventListener("click", function() {
+      if (!("speechSynthesis" in window)) return;
+      window.speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(SLIDES[idx].ayat);
+      u.lang = "ar-SA";
+      u.rate = 0.85;
+      window.speechSynthesis.speak(u);
+    });
+
+    btnBantuan.addEventListener("click", function() {
+      const hidden = bantuanEl.classList.toggle("hidden");
+      btnBantuan.textContent = hidden ? "Tampilkan Latin & Arti" : "Sembunyikan Latin & Arti";
+    });
+
+    document.getElementById("btnPrev").addEventListener("click", function() {
+      idx = (idx - 1 + SLIDES.length) % SLIDES.length;
+      render();
+    });
+
+    document.getElementById("btnNext").addEventListener("click", function() {
+      idx = (idx + 1) % SLIDES.length;
+      render();
+    });
+
+    render();
+  </script>
+</body>
+</html>

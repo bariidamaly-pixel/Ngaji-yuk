@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Iqro Interaktif</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f6f8f7;
+      --card: #ffffff;
+      --primary: #0f766e;
+      --primary-soft: #ccfbf1;
+      --text: #0f172a;
+      --muted: #475569;
+      --border: #e2e8f0;
+      --ok: #15803d;
+      --ok-bg: #dcfce7;
+      --no: #b91c1c;
+      --no-bg: #fee2e2;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Plus Jakarta Sans", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      padding: 20px 16px 48px;
+    }
+
+    .container { max-width: 840px; margin: 0 auto; }
+
+    header {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px 20px;
+      margin-bottom: 14px;
+    }
+
+    header h1 { font-size: 1.35rem; color: var(--primary); margin-bottom: 4px; }
+    header p { font-size: 0.9rem; color: var(--muted); }
+
+    .tabs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+
+    .tab-btn {
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--text);
+      padding: 9px 13px;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 0.86rem;
+      cursor: pointer;
+    }
+
+    .tab-btn.active {
+      background: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+    }
+
+    .panel { display: none; }
+    .panel.active { display: block; }
+
+    .section-note {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 14px;
+      margin-bottom: 14px;
+      font-size: 0.88rem;
+      color: var(--muted);
+    }
+
+    .sub-heading {
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin: 18px 0 10px;
+      color: var(--text);
+    }
+
+    .grid-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(112px, 1fr));
+      gap: 12px;
+    }
+
+    .sambung-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .kata-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(165px, 1fr));
+      gap: 12px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px 10px;
+      text-align: center;
+      cursor: pointer;
+      transition: transform 0.12s ease, border-color 0.12s ease;
+    }
+
+    .card:hover { transform: translateY(-2px); border-color: var(--primary); }
+
+    .arabic {
+      font-family: "Amiri", "Traditional Arabic", serif;
+      direction: rtl;
+      line-height: 1.55;
+      color: var(--text);
+    }
+
+    .huruf-besar { font-size: 2.5rem; font-weight: 700; margin-bottom: 4px; }
+    .sambung-row {
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      font-size: 1.9rem;
+      font-weight: 700;
+      margin: 6px 0;
+    }
+    .kata-arab { font-size: 2.05rem; font-weight: 700; margin-bottom: 4px; }
+    .latin { font-size: 0.86rem; font-weight: 600; color: var(--primary); }
+    .sub { font-size: 0.75rem; color: var(--muted); }
+
+    .quiz-box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 22px;
+      text-align: center;
+    }
+
+    .quiz-target { font-size: 3.3rem; font-weight: 700; margin: 10px 0 14px; }
+
+    .btn-audio {
+      background: var(--primary-soft);
+      color: var(--primary);
+      border: none;
+      padding: 8px 15px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 0.84rem;
+      cursor: pointer;
+      margin-bottom: 16px;
+    }
+
+    .options {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      max-width: 420px;
+      margin: 0 auto 14px;
+    }
+
+    .opt-btn {
+      padding: 11px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .opt-btn.correct { background: var(--ok-bg); color: var(--ok); border-color: var(--ok); }
+    .opt-btn.wrong { background: var(--no-bg); color: var(--no); border-color: var(--no); }
+
+    .feedback { min-height: 22px; font-weight: 600; font-size: 0.9rem; margin-bottom: 12px; }
+
+    .next-btn {
+      background: var(--primary);
+      color: #ffffff;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .score { margin-top: 10px; font-size: 0.84rem; color: var(--muted); }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Iqro Interaktif (Jilid 1-6)</h1>
+      <p>Belajar membaca huruf dan kata Arab bertahap sesuai urutan Iqro.</p>
+    </header>
+
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="iqro1">Iqro 1</button>
+      <button class="tab-btn" data-tab="iqro2">Iqro 2</button>
+      <button class="tab-btn" data-tab="iqro3">Iqro 3</button>
+      <button class="tab-btn" data-tab="iqro4">Iqro 4</button>
+      <button class="tab-btn" data-tab="iqro5">Iqro 5</button>
+      <button class="tab-btn" data-tab="iqro6">Iqro 6</button>
+      <button class="tab-btn" data-tab="kuis">Kuis</button>
+    </div>
+
+    <section id="iqro1" class="panel active">
+      <div class="section-note"><strong>Iqro 1:</strong> Huruf hijaiyah berharakat fathah (-a) dibaca langsung.</div>
+      <div class="grid-cards" id="iqro1Grid"></div>
+    </section>
+
+    <section id="iqro2" class="panel">
+      <div class="section-note"><strong>Iqro 2:</strong> Bentuk huruf sambung (akhir, tengah, awal) dan mad dasar.</div>
+      <div class="sub-heading">Bentuk Sambung (Akhir · Tengah · Awal)</div>
+      <div class="sambung-grid" id="iqro2SambungGrid"></div>
+      <div class="sub-heading">Latihan Bacaan Panjang Dasar</div>
+      <div class="kata-grid" id="iqro2MadGrid"></div>
+    </section>
+
+    <section id="iqro3" class="panel">
+      <div class="section-note"><strong>Iqro 3:</strong> Kasrah (-i), dhammah (-u), dan mad ya/wau sukun.</div>
+      <div class="sub-heading">Kasrah (-i) &amp; Dhammah (-u)</div>
+      <div class="sambung-grid" id="iqro3HarokatGrid"></div>
+      <div class="sub-heading">Latihan Mad Kasrah &amp; Dhammah</div>
+      <div class="kata-grid" id="iqro3MadGrid"></div>
+    </section>
+
+    <section id="iqro4" class="panel">
+      <div class="section-note"><strong>Iqro 4:</strong> Tanwin (-an, -in, -un), sukun, dan qalqalah.</div>
+      <div class="sub-heading">Tanwin</div>
+      <div class="sambung-grid" id="iqro4TanwinGrid"></div>
+      <div class="sub-heading">Latihan Sukun &amp; Qalqalah</div>
+      <div class="kata-grid" id="iqro4SukunGrid"></div>
+    </section>
+
+    <section id="iqro5" class="panel">
+      <div class="section-note"><strong>Iqro 5:</strong> Tasydid, alif lam (qamariyah &amp; syamsiyah), dan waqaf.</div>
+      <div class="sub-heading">Huruf Bertasydid</div>
+      <div class="sambung-grid" id="iqro5TasydidGrid"></div>
+      <div class="sub-heading">Alif Lam &amp; Latihan Waqaf</div>
+      <div class="kata-grid" id="iqro5KataGrid"></div>
+    </section>
+
+    <section id="iqro6" class="panel">
+      <div class="section-note"><strong>Iqro 6:</strong> Latihan potongan ayat, waqaf, dan hukum tajwid terapan.</div>
+      <div class="sub-heading">Potongan Ayat &amp; Hukum Bacaan</div>
+      <div class="kata-grid" id="iqro6AyatGrid"></div>
+      <div class="sub-heading">Tanda Waqaf &amp; Berhenti</div>
+      <div class="kata-grid" id="iqro6WaqafGrid"></div>
+    </section>
+
+    <section id="kuis" class="panel">
+      <div class="quiz-box">
+        <div class="sub">Pilih bunyi yang sesuai:</div>
+        <div class="arabic quiz-target" id="quizArab">بَ</div>
+        <button class="btn-audio" id="quizPlayBtn">Putar Suara</button>
+        <div class="options" id="quizOptions"></div>
+        <div class="feedback" id="quizFeedback"></div>
+        <button class="next-btn" id="quizNextBtn">Soal Berikutnya</button>
+        <div class="score" id="quizScore">Skor: 0 / 0</div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const DATA = {
+      iqro1: [
+        { f: "أَ", name: "Alif", sound: "a" },
+        { f: "بَ", name: "Ba", sound: "ba" },
+        { f: "تَ", name: "Ta", sound: "ta" },
+        { f: "ثَ", name: "Tsa", sound: "tsa" },
+        { f: "جَ", name: "Jim", sound: "ja" },
+        { f: "حَ", name: "Ha", sound: "ha" },
+        { f: "خَ", name: "Kha", sound: "kha" },
+        { f: "دَ", name: "Dal", sound: "da" },
+        { f: "ذَ", name: "Dzal", sound: "dza" },
+        { f: "رَ", name: "Ra", sound: "ra" },
+        { f: "زَ", name: "Zai", sound: "za" },
+        { f: "سَ", name: "Sin", sound: "sa" },
+        { f: "شَ", name: "Syin", sound: "sya" },
+        { f: "صَ", name: "Shad", sound: "sha" },
+        { f: "ضَ", name: "Dhad", sound: "dha" },
+        { f: "طَ", name: "Tha", sound: "tha" },
+        { f: "ظَ", name: "Zha", sound: "zha" },
+        { f: "عَ", name: "Ain", sound: "a" },
+        { f: "غَ", name: "Ghain", sound: "gha" },
+        { f: "فَ", name: "Fa", sound: "fa" },
+        { f: "قَ", name: "Qaf", sound: "qa" },
+        { f: "كَ", name: "Kaf", sound: "ka" },
+        { f: "لَ", name: "Lam", sound: "la" },
+        { f: "مَ", name: "Mim", sound: "ma" },
+        { f: "نَ", name: "Nun", sound: "na" },
+        { f: "وَ", name: "Wau", sound: "wa" },
+        { f: "هَ", name: "Ha", sound: "ha" },
+        { f: "يَ", name: "Ya", sound: "ya" }
+      ],
+      iqro2Sambung: [
+        { name: "Ba", end: "ـبَ", mid: "ـبَـ", start: "بَـ", sound: "ba" },
+        { name: "Ta", end: "ـتَ", mid: "ـتَـ", start: "تَـ", sound: "ta" },
+        { name: "Jim", end: "ـجَ", mid: "ـجَـ", start: "جَـ", sound: "ja" },
+        { name: "Sin", end: "ـسَ", mid: "ـسَـ", start: "سَـ", sound: "sa" },
+        { name: "Fa", end: "ـفَ", mid: "ـفَـ", start: "فَـ", sound: "fa" },
+        { name: "Mim", end: "ـمَ", mid: "ـمَـ", start: "مَـ", sound: "ma" }
+      ],
+      iqro2Mad: [
+        { ar: "بَا", lat: "baa" },
+        { ar: "تَا", lat: "taa" },
+        { ar: "قَالَ", lat: "qaala" },
+        { ar: "كَانَ", lat: "kaana" }
+      ],
+      iqro3Harokat: [
+        { name: "Ba", k: "بِ", d: "بُ", sound: "bi · bu" },
+        { name: "Ta", k: "تِ", d: "تُ", sound: "ti · tu" },
+        { name: "Jim", k: "جِ", d: "جُ", sound: "ji · ju" },
+        { name: "Mim", k: "مِ", d: "مُ", sound: "mi · mu" }
+      ],
+      iqro3Mad: [
+        { ar: "بِي", lat: "bii" },
+        { ar: "بُو", lat: "buu" },
+        { ar: "يَقُولُ", lat: "yaquulu" },
+        { ar: "سَمِيعٌ", lat: "samiiun" }
+      ],
+      iqro4Tanwin: [
+        { name: "Ba", a: "بًا", i: "بٍ", u: "بٌ", sound: "ban · bin · bun" },
+        { name: "Ta", a: "تًا", i: "تٍ", u: "تٌ", sound: "tan · tin · tun" },
+        { name: "Lam", a: "لًا", i: "لٍ", u: "لٌ", sound: "lan · lin · lun" },
+        { name: "Mim", a: "مًا", i: "مٍ", u: "مٌ", sound: "man · min · mun" }
+      ],
+      iqro4Sukun: [
+        { ar: "اَبْ", lat: "ab (qalqalah)" },
+        { ar: "اَقْ", lat: "aq (qalqalah)" },
+        { ar: "مِنْ", lat: "min (sukun)" },
+        { ar: "اَلْحَمْدُ", lat: "al-hamdu" }
+      ],
+      iqro5Tasydid: [
+        { name: "Ba", a: "بَّ", i: "بِّ", u: "بُّ", sound: "abba · ibbi · ubbu" },
+        { name: "Lam", a: "لَّ", i: "لِّ", u: "لُّ", sound: "alla · illi · ullu" },
+        { name: "Mim", a: "مَّ", i: "مِّ", u: "مُّ", sound: "amma · immi · ummu" },
+        { name: "Nun", a: "نَّ", i: "نِّ", u: "نُّ", sound: "anna · inni · unnu" }
+      ],
+      iqro5Kata: [
+        { ar: "اَلْكِتَابُ", lat: "al-kitaabu" },
+        { ar: "اَلشَّمْسُ", lat: "asy-syamsu" },
+        { ar: "إِنَّ", lat: "inna" },
+        { ar: "عَلَيْهِمْ", lat: "alaihim" }
+      ],
+      iqro6Ayat: [
+        { ar: "مِنْ رَبِّهِمْ", lat: "mir rabbihim (idgham bila ghunnah)" },
+        { ar: "مِنْ بَعْدِ", lat: "mim badi (iqlab)" },
+        { ar: "سَمِيعًا عَلِيمًا", lat: "samii'an aliiman (izhar)" },
+        { ar: "وَالضُّحَىٰ", lat: "wadh-dhuhaa (mad & tafkhim)" }
+      ],
+      iqro6Waqaf: [
+        { ar: "الْعَالَمِينَ ۩", lat: "al-aalamiin (waqaf sukun)" },
+        { ar: "مُسْتَقِيمٍ ۖ", lat: "mustaqiim (waqaf jaiz)" },
+        { ar: "فِيهِ هُدًى ۚ", lat: "fiihi hudan (waqaf mujawwaz)" },
+        { ar: "لَا رَيْبَ ۛ", lat: "laa raiba (mu'anaqah)" }
+      ]
+    };
+
+    function speakArabic(text) {
+      if (!("speechSynthesis" in window)) return;
+      window.speechSynthesis.cancel();
+      const utter = new SpeechSynthesisUtterance(text);
+      utter.lang = "ar-SA";
+      utter.rate = 0.85;
+      window.speechSynthesis.speak(utter);
+    }
+
+    function renderHuruf(containerId, list) {
+      const el = document.getElementById(containerId);
+      list.forEach(function(item) {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML =
+          "<div class=\"arabic huruf-besar\">" + item.f + "</div>" +
+          "<div class=\"latin\">" + item.sound + "</div>" +
+          "<div class=\"sub\">" + item.name + "</div>";
+        card.addEventListener("click", function() { speakArabic(item.f); });
+        el.appendChild(card);
+      });
+    }
+
+    function renderTiga(containerId, list, mode) {
+      const el = document.getElementById(containerId);
+      list.forEach(function(item) {
+        const card = document.createElement("div");
+        card.className = "card";
+        const rowHtml = mode === "sambung"
+          ? "<span>" + item.end + "</span><span>" + item.mid + "</span><span>" + item.start + "</span>"
+          : mode === "dua"
+          ? "<span>" + item.k + "</span><span>" + item.d + "</span>"
+          : "<span>" + item.a + "</span><span>" + item.i + "</span><span>" + item.u + "</span>";
+        card.innerHTML =
+          "<div class=\"sub\">" + item.name + "</div>" +
+          "<div class=\"arabic sambung-row\">" + rowHtml + "</div>" +
+          "<div class=\"latin\">" + item.sound + "</div>";
+        card.addEventListener("click", function() { speakArabic(item.sound); });
+        el.appendChild(card);
+      });
+    }
+
+    function renderKata(containerId, list) {
+      const el = document.getElementById(containerId);
+      list.forEach(function(w) {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML =
+          "<div class=\"arabic kata-arab\">" + w.ar + "</div>" +
+          "<div class=\"latin\">" + w.lat + "</div>";
+        card.addEventListener("click", function() { speakArabic(w.ar); });
+        el.appendChild(card);
+      });
+    }
+
+    renderHuruf("iqro1Grid", DATA.iqro1);
+    renderTiga("iqro2SambungGrid", DATA.iqro2Sambung, "sambung");
+    renderKata("iqro2MadGrid", DATA.iqro2Mad);
+    renderTiga("iqro3HarokatGrid", DATA.iqro3Harokat, "dua");
+    renderKata("iqro3MadGrid", DATA.iqro3Mad);
+    renderTiga("iqro4TanwinGrid", DATA.iqro4Tanwin, "tiga");
+    renderKata("iqro4SukunGrid", DATA.iqro4Sukun);
+    renderTiga("iqro5TasydidGrid", DATA.iqro5Tasydid, "tiga");
+    renderKata("iqro5KataGrid", DATA.iqro5Kata);
+    renderKata("iqro6AyatGrid", DATA.iqro6Ayat);
+    renderKata("iqro6WaqafGrid", DATA.iqro6Waqaf);
+
+    document.querySelectorAll(".tab-btn").forEach(function(btn) {
+      btn.addEventListener("click", function() {
+        document.querySelectorAll(".tab-btn").forEach(function(b) { b.classList.remove("active"); });
+        document.querySelectorAll(".panel").forEach(function(p) { p.classList.remove("active"); });
+        btn.classList.add("active");
+        document.getElementById(btn.dataset.tab).classList.add("active");
+      });
+    });
+
+    let currentQuestion = null;
+    let score = 0;
+    let total = 0;
+    let answered = false;
+
+    const quizArabEl = document.getElementById("quizArab");
+    const quizOptionsEl = document.getElementById("quizOptions");
+    const quizFeedbackEl = document.getElementById("quizFeedback");
+    const quizScoreEl = document.getElementById("quizScore");
+
+    function generateQuestion() {
+      answered = false;
+      quizFeedbackEl.textContent = "";
+      quizOptionsEl.innerHTML = "";
+
+      const pool = DATA.iqro1.slice();
+      const target = pool.splice(Math.floor(Math.random() * pool.length), 1)[0];
+      const choices = [target];
+
+      while (choices.length < 4 && pool.length > 0) {
+        const idx = Math.floor(Math.random() * pool.length);
+        const candidate = pool.splice(idx, 1)[0];
+        if (!choices.some(function(c) { return c.sound === candidate.sound; })) {
+          choices.push(candidate);
+        }
+      }
+
+      choices.sort(function() { return Math.random() - 0.5; });
+      currentQuestion = target;
+      quizArabEl.textContent = target.f;
+
+      choices.forEach(function(choice) {
+        const btn = document.createElement("button");
+        btn.className = "opt-btn";
+        btn.textContent = choice.sound + " (" + choice.name + ")";
+        btn.addEventListener("click", function() {
+          if (answered) return;
+          answered = true;
+          total++;
+          if (choice.name === target.name && choice.sound === target.sound) {
+            btn.classList.add("correct");
+            score++;
+            quizFeedbackEl.textContent = "Benar!";
+            quizFeedbackEl.style.color = "var(--ok)";
+          } else {
+            btn.classList.add("wrong");
+            quizFeedbackEl.textContent = "Kurang tepat. Bunyinya: " + target.sound + " (" + target.name + ").";
+            quizFeedbackEl.style.color = "var(--no)";
+          }
+          quizScoreEl.textContent = "Skor: " + score + " / " + total;
+        });
+        quizOptionsEl.appendChild(btn);
+      });
+    }
+
+    document.getElementById("quizPlayBtn").addEventListener("click", function() {
+      if (currentQuestion) speakArabic(currentQuestion.f);
+    });
+    document.getElementById("quizNextBtn").addEventListener("click", generateQuestion);
+    generateQuestion();
+  </script>
+</body>
+</html>
+<div style="text-align: center; margin: 20px 0 32px;">
+  <a href="Index.html" style="display: inline-block; text-decoration: none; background: #e2e8f0; color: #0f172a; padding: 10px 16px; border-radius: 10px; font-weight: 600; font-size: 0.9rem;">← Kembali ke Beranda</a>
+</div>
